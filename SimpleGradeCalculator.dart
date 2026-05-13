@@ -52,5 +52,5 @@ double calculateAverage(List<double> testScores)
 }
 void showResults(String name, List<double> scores, double average, String letterGrade)
 {
-  print("$name scored ${scores.join(", ")} for an average score of $average which is a $letterGrade");
+  print("$name scored ${scores.join(", ")} for an average score of ${average.toStringAsFixed(2)}% which is a $letterGrade");
 }
