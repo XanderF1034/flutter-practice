@@ -4,6 +4,15 @@ void main() {
   runApp(const MainApp());
 }
 
+class Task {
+  String name = "";
+  bool doneOrNot = false;
+  Task(String name, bool doneOrNot) {
+    this.name = name;
+    this.doneOrNot = doneOrNot;
+  }
+}
+
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
   @override
@@ -13,7 +22,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   final taskController = TextEditingController();
   String buttonTxt = "Add Task";
-  List<String> tasks = [];
+  List<Task> tasks = [];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -60,28 +69,40 @@ class _MainAppState extends State<MainApp> {
                   return (Container(
                     margin: EdgeInsets.only(bottom: 10),
                     padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(color: Colors.blueGrey, borderRadius: BorderRadius.circular(12),),
+                    decoration: BoxDecoration(
+                      color: tasks[index].doneOrNot ? Colors.grey : Colors.blue,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Checkbox(
+                          value: tasks[index].doneOrNot,
+                          onChanged: (value) {
+                            setState(() {
+                              tasks[index].doneOrNot = value!;
+                            });
+                          },
+                        ),
                         Text(
-                          tasks[index],
-                          style: const TextStyle(color: Colors.blue),
+                          tasks[index].name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: tasks[index].doneOrNot
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                            ),
                         ),
                         IconButton(
                           onPressed: () {
                             setState(() {
-                            tasks.removeAt(index);
-                          });
+                              tasks.removeAt(index);
+                            });
                           },
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                            ),
+                          icon: const Icon(Icons.delete, color: Colors.white),
                         ),
                       ],
                     ),
-                    
                   ));
                 },
               ),
@@ -96,8 +117,9 @@ class _MainAppState extends State<MainApp> {
     setState(() {
       if ((taskController.text).isNotEmpty) {
         buttonTxt = "Success.";
-        tasks.add(taskController.text);
-        taskController.text = " ";
+        Task t = Task(taskController.text.trim(), false);
+        tasks.add(t);
+        taskController.clear();
         Future.delayed(Duration(seconds: 2), () {
           setState(() {
             buttonTxt = "Add Task";
@@ -112,5 +134,11 @@ class _MainAppState extends State<MainApp> {
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    taskController.dispose();
+    super.dispose();
   }
 }
