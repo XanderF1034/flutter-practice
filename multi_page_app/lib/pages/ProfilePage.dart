@@ -13,10 +13,17 @@ class _Profilepagestate extends State<Profilepage> {
   final Student xander = Student("Xander", "Fleming", "Science", 11, 17, 4.833);
   final Student ty = Student("Ty", "Allen", "Trigonometry", 11, 17, 2.7);
   final Student zack = Student("Zachary", "Siegel", "ELA", 11, 17, 4.5);
-  final TextEditingController searchEditor = TextEditingController();
+  final searchEditor = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     List<Student> students = [xander, ty, zack];
+
+    String searchText = searchEditor.text.toLowerCase();
+    List<Student> filteredStudents = students.where((student) {
+      return student.firstName.toLowerCase().contains(searchText) ||
+          student.lastName.toLowerCase().contains(searchText);
+    }).toList();
     return Scaffold(
       appBar: AppBar(title: Text('Profile Page')),
       body: Padding(
@@ -26,43 +33,72 @@ class _Profilepagestate extends State<Profilepage> {
           child: Column(
             children: [
               TextField(
+                controller: searchEditor,
+                onChanged: (value) {
+                  setState(() {});
+                },
                 decoration: InputDecoration(
                   labelText: "Search For a Student",
                   hintText: 'John Doe',
                   border: OutlineInputBorder(),
                 ),
               ),
-              ListView.builder(
-                itemCount: students.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                Studentinfopage(student: students[index]),
+              if (filteredStudents.isNotEmpty) ...[
+                SizedBox(height: 75),
+                Expanded(
+                child: ListView.builder(
+                  itemCount: filteredStudents.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Studentinfopage(
+                                student: filteredStudents[index],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          '${filteredStudents[index].firstName} ${filteredStudents[index].lastName}',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
                           ),
-                        );
-                      },
-                      child: Text(
-                        '${students[index].firstName} ${students[index].lastName}',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
+                ),
+              ]
+              else ...[
+                SizedBox(height: 50),
+                const Text(
+                  "No Students found.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50,
+                  )
+                  
+                )
+
+              ]
+                
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    searchEditor.dispose();
+    super.dispose();
   }
 }
