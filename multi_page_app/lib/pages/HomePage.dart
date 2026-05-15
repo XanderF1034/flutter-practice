@@ -21,7 +21,7 @@ class Homepage extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 200,
+                  fontSize: 25,
                 ),
               ),
               SizedBox(height: 100),
