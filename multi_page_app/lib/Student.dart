@@ -7,7 +7,7 @@ class Student {
     String lastName,
     String favoriteSubject,
     int gradeLevel,
-    age,
+    int age,
     double gpa,
   ) {
     this.firstName = firstName;

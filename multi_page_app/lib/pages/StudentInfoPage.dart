@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multi_page_app/pages/ProfilePage.dart';
 import 'package:multi_page_app/Student.dart';
 
 class Studentinfopage extends StatelessWidget {
@@ -9,7 +8,9 @@ class Studentinfopage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Xander Info Page')),
+      appBar: AppBar(
+        title: Text('${student.firstName} ${student.lastName} Info Page'),
+      ),
       body: Padding(
         padding: EdgeInsets.all(20),
 
